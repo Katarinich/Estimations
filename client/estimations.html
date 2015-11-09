@@ -1,0 +1,30 @@
+<template name="estimations">
+    <div class="container">
+        <div class="create-new-list"><button class="btn btn-default create-new-list">Create new list</button></div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Client Name</th>
+                <th>Hours</th>
+                <th>Sum</th>
+                <th>Date Created</th>
+                <th>Date Updated</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each lists}}
+                <tr>
+                    <td><a href="/estimations/{{_id}}">{{name}}</a></td>
+                    <td>{{clientName}}</td>
+                    <td>{{projectTotalHours}}</td>
+                    <td>{{projectTotalSum}}</td>
+                    <td>{{dateCreated}}</td>
+                    <td>{{dateUpdated}}</td>
+                    <td><button class="delete">&times;</button></td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>
