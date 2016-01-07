@@ -101,7 +101,7 @@ Template.listEditor.events({
                         index: newIndex,
                         nesting: newNesting,
                         previousId: this._id,
-                        parentId: this.parentId,
+                        parentId: this._id,
                         nextId: nextRecord._id,
                         listId: this.listId,
                         text: "",
@@ -114,16 +114,16 @@ Template.listEditor.events({
                     RecordsList.update( {_id: nextRecord._id}, {$set: {previousId: newRecord._id}});
 
                     //все дети предыдущей записи становятся детьми новой
-                    RecordsList.find({parentId: this._id}).forEach(function(item) {
+                    /*RecordsList.find({parentId: this._id}).forEach(function(item) {
                         RecordsList.update({_id: item._id}, {$set: {parentId: newRecord._id}});
-                    });
+                    });*/
                 }
                 else{
                     RecordsList.insert({
                         index: newIndex,
                         nesting: newNesting,
                         previousId: this._id,
-                        parentId: this.parentId,
+                        parentId: this._id,
                         listId: this.listId,
                         text: "",
                         hours: "",
@@ -215,18 +215,22 @@ Template.listEditor.events({
         Lists.update({_id: this.listId}, {$set: {dateUpdated: new Date()}});
     },
     "click .create": function(){
-        if(RecordsList.find({index: 1, listId: this._id}).count() == 0) {
+        if(RecordsList.find({index: 2, listId: Session.get("currentList")}).count() == 0) {
+            var parentRecord = RecordsList.findOne({index: 1, listId: Session.get("currentList")});
             RecordsList.insert({
-                index: 1,
-                nesting: "nt-lvl-0",
-                parentId: null,
-                listId: this._id,
+                index: 2,
+                nesting: "nt-lvl-1",
+                parentId: parentRecord._id,
+                previousId: parentRecord._id,
+                listId: Session.get("currentList"),
                 text: "",
                 hours: "",
                 price: "",
                 sum: 0
             });
-			var newRecord = RecordsList.findOne({index: 1, listId: this._id});
+			var newRecord = RecordsList.findOne({index: 2, listId: Session.get("currentList")});
+            RecordsList.update({_id: parentRecord._id}, {$set: {nextId: newRecord._id}});
+
 			document.getElementById(newRecord._id).getElementsByClassName("record-text-div")[0].innerHTML = "<input class='record-text mousetrap'  type='text' id=" + newRecord._id + " value='" + newRecord.text + "' />";
 			document.getElementById(newRecord._id).getElementsByClassName("record-text")[0].focus();
         }
@@ -238,11 +242,15 @@ Template.listEditor.events({
 	'blur .record-text' : function(e){
         var currentRecord = RecordsList.findOne({_id: e.target.id});
         var newText = e.target.value;
-        if(newText == currentRecord.text){
-            document.getElementById(currentRecord._id).getElementsByClassName("record-text-div")[0].innerHTML = newText;
+
+        if(currentRecord.isParent){
+            document.getElementById(currentRecord._id).getElementsByClassName("record-text-div")[0].innerHTML = "<b>" + newText + "<b>";
         }
         else {
-            document.getElementById(currentRecord._id).getElementsByClassName("record-text-div")[0].innerHTML = "";
+            document.getElementById(currentRecord._id).getElementsByClassName("record-text-div")[0].innerHTML = newText;
+        }
+
+        if(newText != currentRecord.text){
             RecordsList.update({_id: currentRecord._id}, {$set: {text: newText}});
             Lists.update({_id: currentRecord.listId}, {$set: {dateUpdated: new Date()}});
         }
@@ -306,6 +314,28 @@ Template.listEditor.events({
             Lists.update({_id: currentList._id}, {$set: {name: newText, dateUpdated: new Date()}});
         }
     },
+    'click .client-name-label-div' : function(e){
+        var currentText = e.target.innerHTML;
+        document.getElementsByClassName("client-name-label-div")[0].style.display = "none";
+        document.getElementsByClassName("client-name-input")[1].style.display = 'inline-block';
+        document.getElementsByClassName("client-name-input")[1] = currentText;
+        document.getElementsByClassName("client-name-input")[1].focus();
+    },
+    'blur .client-name-input' : function(e){
+        var newText = e.target.value;
+        var currentList = Lists.findOne({_id: Session.get("currentList")});
+
+        document.getElementsByClassName("client-name-label-div")[0].style.display = "inline-block";
+        document.getElementsByClassName("client-name-input")[1].style.display = 'none';
+
+        if(newText == currentList.clientName) {
+            document.getElementsByClassName("client-name-label-div")[0].innerHTML = newText;
+        }
+        else {
+            document.getElementsByClassName("client-name-label-div")[0].innerHTML="";
+            Lists.update({_id: currentList._id}, {$set: {clientName: newText, dateUpdated: new Date()}});
+        }
+    },
     'click .record-price-div' : function(e){
         e.target.innerHTML = "<input class='record-price' type='text' value='" + this.price + "' id=" + this._id + " />";
         document.getElementById(this._id).getElementsByClassName("record-price")[0].focus();
@@ -364,12 +394,6 @@ Template.listEditor.events({
         var newText = e.target.value;
         if(newText != this.projectManagement) {
             Lists.update({_id: this._id}, {$set: {projectManagement: newText, dateUpdated: new Date()}});
-        }
-    },
-    'blur .client-name-input' : function(e){
-        var newText = e.target.value;
-        if(newText != this.clientName) {
-            Lists.update({_id: this._id}, {$set: {clientName: newText, dateUpdated: new Date()}});
         }
     },
     "click .testing-checked": function () {

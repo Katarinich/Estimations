@@ -1,22 +1,45 @@
 <template name="listEditor">
-    <div class="back-to-lists"><a href="/estimations/"> Back to lists</a></div>
     <div class="container">
-        <div class="list-name">{{name}}</div>
-        <div class="client-name"><input class="client-name-input typeahead" type="text" value={{clientName}} autocomplete="off" spellcheck="off" data-source="clients" /></div>
 
-        {{#if isEmpty}}<div class="create"><button class="btn btn-default create">Add first line</button></div>{{/if}}
+        <ol class="breadcrumb">
+            <li><a href="/estimations/">Estimations</a></li>
+            <li class="active">{{name}}</li>
+        </ol>
+
+        <div class="names">
+            <div class="list-name-div">
+                <div class="list-name-label"><b>Project name:</b> </div>
+                <div class="list-name"> {{name}}</div>
+            </div>
+
+            <div class="client-name-div">
+                <div class="client-name-label"><b>Client:</b> </div>
+                <div class="client-name-label-div">{{clientName}}</div>
+                <input class="client-name-input typeahead" type="text" value={{clientName}} autocomplete="off" spellcheck="off" data-source="clients" />
+            </div>
+        </div>
 
         {{#each records}}
             <div class="record-line" id={{_id}}>
-                <div class="record-text-div {{nesting}}">{{text}}</div>
                 {{#if isChild}}
+                    {{#if lineIsEmpty}}
+                        <div class="record-text-div empty {{nesting}}">{{text}}</div>
+                        {{else}}
+                        <div class="record-text-div {{nesting}}">{{text}}</div>
+                    {{/if}}
                     <div class="record-hours-div">{{hours}}</div>
                     <div class="record-price-div">{{price}}</div>
                     <div class="record-sum-div">{{sum}}</div>
                     <div class="record-delete-div"><button class="delete">&times;</button></div>
                     {{else}}
+                    {{#if lineIsEmpty}}
+                        <div class="record-text-div empty {{nesting}}">{{text}}</div>
+                    {{else}}
+                        <div class="record-text-div {{nesting}}"><b>{{text}}</b></div>
+                    {{/if}}
                     <div class="record-delete-div parent"><button class="delete">&times;</button></div>
                 {{/if}}
+                {{#if isEmpty}}<div class="create"><button class="btn btn-default create">Add first line</button></div>{{/if}}
             </div>
             {{#if endOfBlock}}
                 {{#each totalSumOfBlock}}
@@ -29,17 +52,17 @@
                 {{/each}}
             {{/if}}
         {{/each}}
-
+        <div class="non-development-label nt-lvl-0-1"><b>Non-development Activities</b></div>
         <div class="testing">
-            <div class="testing-text nt-lvl-0-1">Testing</div>
+            <div class="testing-text nt-lvl-0-2">Testing</div>
             <div class="testing-input-div"><input class="testing-input" type="text" value={{testing}} /></div>
             <div class="testing-hours-div">{{testingHours}}</div>
-            <div class="testing-price-div"><input class="testing-price-input" type="text" value={{testingPrice}} /></div>
+            <div class="testing-price-div"><input class="testing-price-input" type="text" id="testing" value={{testingPrice}} /></div>
             <div class="testing-sum-div">{{testingSum}}</div>
             <input type="checkbox" checked="{{testingChecked}}" class="testing-checked" />
         </div>
         <div class="stabilization">
-            <div class="stabilization-text nt-lvl-0-1">Stabilization</div>
+            <div class="stabilization-text nt-lvl-0-2">Stabilization</div>
             <div class="stabilization-input-div"><input class="stabilization-input" type="text" value={{stabilization}} /></div>
             <div class="stabilization-hours-div">{{stabilizationHours}}</div>
             <div class="stabilization-price-div"><input class="stabilization-price-input" type="text" value={{stabilizationPrice}} /></div>
@@ -47,7 +70,7 @@
             <input type="checkbox" checked="{{stabilizationChecked}}" class="stabilization-checked" />
         </div>
         <div class="project-management">
-            <div class="project-management-text nt-lvl-0-1">Project Management</div>
+            <div class="project-management-text nt-lvl-0-2">Project Management</div>
             <div class="project-management-input-div"><input class="project-management-input" type="text" value={{projectManagement}} /></div>
             <div class="project-management-hours-div">{{projectManagementHours}}</div>
             <div class="project-management-price-div"><input class="project-management-price-input" type="text" value={{projectManagementPrice}} /></div>
@@ -70,5 +93,5 @@
 </template>
 
 <template name="userPill">
-    <span class="label">{{clientName}}</span>
+    <span>{{clientName}}</span>
 </template>
