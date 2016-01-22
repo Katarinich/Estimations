@@ -1,9 +1,11 @@
 <template name="estimationsList">
 	<div class="container">
+	<div class="search-label"><b>Search:</b> </div>
+    <input class="client-filter-input" id="client-filter" type="text"/>
+    <button class='clear-filter'>&times;</button>
+	<div class="create-new-list-div"><button class="btn btn-default create-new-list">Create new list</button></div>
 	    <div class="estimations">
-	    	{{#each estimations}}
-	      		{{> estimation}}
-	    	{{/each}}
+	    	{{> reactiveTable collection=estimations settings=settings showNavigation='never'}}
 	  	</div>
 	 </div>
 </template>
