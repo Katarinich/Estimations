@@ -1,0 +1,16 @@
+<template name="estimationItem">
+	{{#if lineIsEmpty}}
+        <div class="record-text-div empty {{nesting}}">{{text}}</div>
+        {{else}}
+        <div class="record-text-div {{nesting}}">{{text}}</div>
+    {{/if}}
+    <div class="record-hours-div">{{hours}}</div>
+    <div class="record-price-div">{{price}}</div>
+    <div class="record-sum-div">{{sum}}</div>
+    <div class="record-delete-div"><button class="delete">&times;</button></div>
+    {{#if blocks.length}}
+    	{{#each blocks}}
+            {{>estimationItem}}
+        {{/each}}
+    {{/if}}
+</template>

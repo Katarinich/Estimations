@@ -1,3 +1,26 @@
 <template name="estimationPage">
-  {{> estimationItem}}
+	<div class="container">
+
+        <ol class="breadcrumb">
+            <li><a href="/estimations/">Estimations</a></li>
+            <li class="active">{{name}}</li>
+        </ol>
+
+        <div class="names">
+            <div class="list-name-div">
+                <div class="list-name-label"><b>Project name:</b> </div>
+                <div class="list-name"> {{name}}</div>
+            </div>
+
+            <div class="client-name-div">
+                <div class="client-name-label"><b>Client:</b> </div>
+                <div class="client-name-label-div">{{clientName}}</div>
+                <input class="client-name-input typeahead" type="text" value={{clientName}} autocomplete="off" spellcheck="off" data-source="clients" />
+            </div>
+        </div>
+
+        {{#each blocks}}
+            {{>estimationItem}}
+        {{/each}}
+    </div>
 </template>
