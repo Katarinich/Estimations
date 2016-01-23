@@ -39,7 +39,7 @@ Template.estimationsList.helpers({
 });
 
 Template.estimationsList.events({
-    "click .create-new-list": function(){
+    'click .create-new-list': function(){
         Meteor.call('estimationInsert', function(error) {
         	if (error){
         		throwError(error.reason);

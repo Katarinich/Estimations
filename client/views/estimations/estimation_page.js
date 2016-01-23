@@ -1,5 +1,9 @@
-Template.estimationsList.helpers({
-	blocks: function(){
-		return this.blocks;
+Template.estimationPage.helpers({
+	blocksOfEstimation: function(){
+		return Blocks.find({
+			'_id': { $in: 
+				this.blocks
+			}
+		});
 	}
 });

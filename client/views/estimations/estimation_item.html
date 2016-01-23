@@ -1,4 +1,5 @@
 <template name="estimationItem">
+<div id={{_id}} class="record-line" >
 	{{#if lineIsEmpty}}
         <div class="record-text-div empty {{nesting}}">{{text}}</div>
         {{else}}
@@ -8,9 +9,11 @@
     <div class="record-price-div">{{price}}</div>
     <div class="record-sum-div">{{sum}}</div>
     <div class="record-delete-div"><button class="delete">&times;</button></div>
+    </div>
     {{#if blocks.length}}
-    	{{#each blocks}}
+    	{{#each blocksOfEstimation}}
             {{>estimationItem}}
         {{/each}}
     {{/if}}
+
 </template>
