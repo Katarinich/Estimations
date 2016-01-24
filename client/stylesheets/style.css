@@ -37,8 +37,8 @@ input[type="text"] {
     display: inline;
 }
 
-.record-hours, .record-price, .record-sum, .testing-input, .testing-price-input, .stabilization-input, .stabilization-price-input,
-.project-management-input, .project-management-price-input{
+.record-hours, .record-rate, .record-sum, .testing-input, .testing-rate-input, .stabilization-input, .stabilization-rate-input,
+.project-management-input, .project-management-rate-input{
     width: 80px;
     display: inline;
 }
@@ -59,10 +59,10 @@ input[type="text"] {
 .record-delete-div{
     display: inline;
 }
-.record-price-div, .record-hours-div, .record-sum-div, .testing-hours-div, .testing-input-div, .testing-price-div,
-.testing-sum-div, .total-price-div, .total-hours-div, .total-sum-div, .stabilization-hours-div, .stabilization-input-div,
-.stabilization-price-div, .stabilization-sum-div, .project-management-hours-div, .project-management-input-div,
-.project-management-price-div, .project-management-sum-div{
+.record-rate-div, .record-hours-div, .record-sum-div, .testing-hours-div, .testing-input-div, .testing-rate-div,
+.testing-sum-div, .total-rate-div, .total-hours-div, .total-sum-div, .stabilization-hours-div, .stabilization-input-div,
+.stabilization-rate-div, .stabilization-sum-div, .project-management-hours-div, .project-management-input-div,
+.project-management-rate-div, .project-management-sum-div{
     width: 80px;
     height: 30px;
     display: inline-block;
