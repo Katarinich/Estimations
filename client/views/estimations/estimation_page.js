@@ -1,10 +1,10 @@
 Template.estimationPage.helpers({
 	blocksOfEstimation: function(){
-		return Blocks.find({
-			'_id': { $in: 
-				this.blocks
-			}
-		});
+        var result = [];
+        for(var i = 0; i < this.blocks.length; i++) {
+            result.push(Blocks.findOne({_id: this.blocks[i]}));
+        }
+        return result;
 	}
 });
 
