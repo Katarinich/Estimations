@@ -2,25 +2,7 @@ Template.estimationItem.rendered = function() {
     Meteor.typeahead.inject();
 
     Mousetrap.bind('ctrl+right', function(e, combo) {
-    	var currentBlock = Blocks.findOne( {_id: e.target.id});
-    	var parentBlock = Blocks.findOne( {_id: currentBlock.parentId} );
-    	var newParentId = parentBlock.blocks[parentBlock.blocks.indexOf(currentBlock._id) - 1];
-    	var newParent = Blocks.findOne( {_id: newParentId} );
-
-    	//разрываем предыдущие отношения и устанавливаем новые
-    	parentBlock.blocks.splice(parentBlock.blocks.indexOf(currentBlock._id), 1);
-    	Meteor.call('blockUpdate', parentBlock._id, 'blocks', parentBlock.blocks);
-    	Meteor.call('blockUpdate', currentBlock._id, 'parentId', newParentId);
-    	newParent.blocks.push(currentBlock._id);
-    	Meteor.call('blockUpdate', newParentId, 'blocks', newParent.blocks);
-
-    	var newNesting = "nt-lvl-" + (Number(currentBlock.nesting.substr(currentBlock.nesting.length - 1)) + 1);
-    	Meteor.call('blockUpdate', currentBlock._id, 'nesting', newNesting);
-
-    	if(currentBlock.isParent) {
-
-    	}
-    	e.stopPropagation();
+    	Meteor.call('blockDepose', e.target.id);
     });
 };
 
@@ -29,7 +11,7 @@ Template.estimationItem.helpers({
         return this.text == "";
     },
     blocksOfEstimation: function(){
-    	return Blocks.find({parentId: this._id});
+    	return Blocks.find({parentId: this._id}, {sort: {index: 1}});
 	},
 	'sum': function(){
 		return Number(this.rate) * Number(this.hours); 
@@ -54,6 +36,7 @@ Template.estimationItem.events({
 	},
 	'focus .record-text, blur .record-hours, blur .record-rate' : function(e) {
 		var valueToEdit = e.target.attributes[0].value.split("-")[1];
+		console.log(this);
 		Session.set('valueToEdit', valueToEdit);
 	},
 	'blur .record-text, blur .record-hours, blur .record-rate' : function(e){
@@ -79,7 +62,7 @@ Template.estimationItem.events({
 			var currentEstimation = Estimations.findOne({_id: currentBlock.estimationId});
 			var parentBlock = Blocks.findOne({_id: currentBlock.parentId});
 			var newBlockId;
-			Meteor.call('blockInsert', currentEstimation._id, parentBlock._id, currentBlock.nesting);
+			Meteor.call('blockInsert', currentEstimation._id, parentBlock._id, currentBlock.nesting, currentBlock.index + 1);
 			
 			parentBlock = Blocks.findOne({_id: currentBlock.parentId});
        	 	newBlockId = parentBlock.blocks[parentBlock.blocks.length - 1];
