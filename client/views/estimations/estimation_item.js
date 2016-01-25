@@ -1,5 +1,27 @@
 Template.estimationItem.rendered = function() {
     Meteor.typeahead.inject();
+
+    Mousetrap.bind('ctrl+right', function(e, combo) {
+    	var currentBlock = Blocks.findOne( {_id: e.target.id});
+    	var parentBlock = Blocks.findOne( {_id: currentBlock.parentId} );
+    	var newParentId = parentBlock.blocks[parentBlock.blocks.indexOf(currentBlock._id) - 1];
+    	var newParent = Blocks.findOne( {_id: newParentId} );
+
+    	//разрываем предыдущие отношения и устанавливаем новые
+    	parentBlock.blocks.splice(parentBlock.blocks.indexOf(currentBlock._id), 1);
+    	Meteor.call('blockUpdate', parentBlock._id, 'blocks', parentBlock.blocks);
+    	Meteor.call('blockUpdate', currentBlock._id, 'parentId', newParentId);
+    	newParent.blocks.push(currentBlock._id);
+    	Meteor.call('blockUpdate', newParentId, 'blocks', newParent.blocks);
+
+    	var newNesting = "nt-lvl-" + (Number(currentBlock.nesting.substr(currentBlock.nesting.length - 1)) + 1);
+    	Meteor.call('blockUpdate', currentBlock._id, 'nesting', newNesting);
+
+    	if(currentBlock.isParent) {
+
+    	}
+    	e.stopPropagation();
+    });
 };
 
 Template.estimationItem.helpers({
@@ -7,11 +29,7 @@ Template.estimationItem.helpers({
         return this.text == "";
     },
     blocksOfEstimation: function(){
-    	var result = [];
-    	for(var i = 0; i < this.blocks.length; i++) {
-    		result.push(Blocks.findOne({_id: this.blocks[i]}));
-    	}
-    	return result;
+    	return Blocks.find({parentId: this._id});
 	},
 	'sum': function(){
 		return Number(this.rate) * Number(this.hours); 
@@ -24,7 +42,7 @@ Template.estimationItem.events({
 		e.stopImmediatePropagation();
 	},
 	'click .record-text-div, click .record-hours-div, click .record-rate-div' : function(e){
-		console.log(this);
+		console.log(e.target);
 		var valueToEdit = e.target.attributes[0].value.split("-")[1];
 		Session.set('valueToEdit', valueToEdit);
 
@@ -33,6 +51,10 @@ Template.estimationItem.events({
         document.getElementsByClassName("record-" + valueToEdit)[0].focus();
         e.stopImmediatePropagation();
         return false;
+	},
+	'focus .record-text, blur .record-hours, blur .record-rate' : function(e) {
+		var valueToEdit = e.target.attributes[0].value.split("-")[1];
+		Session.set('valueToEdit', valueToEdit);
 	},
 	'blur .record-text, blur .record-hours, blur .record-rate' : function(e){
         var currentBlock = Blocks.findOne({_id: e.target.id});
@@ -57,23 +79,15 @@ Template.estimationItem.events({
 			var currentEstimation = Estimations.findOne({_id: currentBlock.estimationId});
 			var parentBlock = Blocks.findOne({_id: currentBlock.parentId});
 			var newBlockId;
-			Meteor.call('blockInsert', currentEstimation._id, parentBlock._id, currentBlock.nesting, function(error, result) {
-        		if (error){
-        			throwError(error.reason);
-        		}
-
-        		newBlockId = result;
-        		parentBlock.blocks.splice(parentBlock.blocks.indexOf(currentBlock._id) + 1, 0, newBlockId);
-
-       	 		Meteor.call('blockUpdate', parentBlock._id, "blocks", parentBlock.blocks, function(error) {
-        			if (error){
-        				throwError(error.reason);
-        			}
-       	 		});
-       	 	});
-			Session.set('valueToEdit', "rate");
-			e.target.blur();
-		}
+			Meteor.call('blockInsert', currentEstimation._id, parentBlock._id, currentBlock.nesting);
+			
+			parentBlock = Blocks.findOne({_id: currentBlock.parentId});
+       	 	newBlockId = parentBlock.blocks[parentBlock.blocks.length - 1];
+       	 	var newBlock = Blocks.findOne({_id: newBlockId});
+       	 	Session.set('valueToEdit', "rate");
+        	document.getElementById(newBlockId).getElementsByClassName("record-text-div")[0].innerHTML = "<input class='record-text mousetrap'  type='text' id=" + newBlockId + " value='' />";
+            document.getElementById(newBlockId).getElementsByClassName("record-text")[0].focus();
+       	}	
 	},
 	'keypress .record-hours' : function(e) {
         if (e.keyCode == 13) {    	
