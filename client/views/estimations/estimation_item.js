@@ -2,7 +2,23 @@ Template.estimationItem.rendered = function() {
     Meteor.typeahead.inject();
 
     Mousetrap.bind('ctrl+right', function(e, combo) {
-    	Meteor.call('blockDepose', e.target.id);
+    	var currentValue = e.target.value;
+    	var currentBlock = Blocks.findOne({_id: e.target.id});
+    	Meteor.call('blockDepose', e.target.id, 1);
+    	if(Blocks.findOne({_id: e.target.id}).nesting != currentBlock.nesting){
+	    	document.getElementById(e.target.id).getElementsByClassName("record-text-div")[0].innerHTML = "<input class='record-text mousetrap'  type='text' id=" + e.target.id + " value='" + currentValue + "' />";
+	        document.getElementById(e.target.id).getElementsByClassName("record-text")[0].focus();
+    	}
+    });
+
+    Mousetrap.bind('ctrl+left', function(e, combo) {
+    	var currentValue = e.target.value;
+    	var currentBlock = Blocks.findOne({_id: e.target.id});
+    	Meteor.call('blockDepose', e.target.id, -1);
+    	if(Blocks.findOne({_id: e.target.id}).nesting != currentBlock.nesting){
+	    	document.getElementById(e.target.id).getElementsByClassName("record-text-div")[0].innerHTML = "<input class='record-text mousetrap'  type='text' id=" + e.target.id + " value='" + currentValue + "' />";
+	        document.getElementById(e.target.id).getElementsByClassName("record-text")[0].focus();
+    	}
     });
 };
 
@@ -15,16 +31,55 @@ Template.estimationItem.helpers({
 	},
 	'sum': function(){
 		return Number(this.rate) * Number(this.hours); 
+	},
+	'notBaseBlock' : function() {
+		return this.nesting != "nt-lvl-0";
+	},
+	'totalHours' : function() {
+		var result = 0;
+
+		function sumOfBlock(blockId) {
+			Blocks.find({parentId: blockId}).forEach(function(element) {
+				if(element.isParent == false || element.isParent == undefined){
+					result = result + Number(element.hours);
+				}
+				else{
+					sumOfBlock(element._id);
+				}
+			});
+		}
+
+		sumOfBlock(this._id)
+		return result;
+	},
+	'totalSum' : function() {
+		var result = 0;
+		
+		function sumOfBlock(blockId) {
+			Blocks.find({parentId: blockId}).forEach(function(element) {
+				if(element.isParent == false || element.isParent == undefined){
+					result = result + (Number(element.rate) * Number(element.hours));
+				}
+				else{
+					sumOfBlock(element._id);
+				}
+			});
+		}
+		
+		sumOfBlock(this._id);
+		return result;
+	},
+	'endOfBlock' : function() {
+		return Blocks.find({parentId: this._id}).count() > 0;
 	}
 });
 
 Template.estimationItem.events({
 	'click .delete' : function(e) {
 		Meteor.call('blockRemove', this._id);
-		e.stopImmediatePropagation();
 	},
 	'click .record-text-div, click .record-hours-div, click .record-rate-div' : function(e){
-		console.log(e.target);
+		console.log(this);
 		var valueToEdit = e.target.attributes[0].value.split("-")[1];
 		Session.set('valueToEdit', valueToEdit);
 
@@ -32,12 +87,12 @@ Template.estimationItem.events({
 
         document.getElementsByClassName("record-" + valueToEdit)[0].focus();
         e.stopImmediatePropagation();
-        return false;
 	},
-	'focus .record-text, blur .record-hours, blur .record-rate' : function(e) {
+	'focus .record-text, focus .record-hours, focus .record-rate' : function(e) {
+		e.stopImmediatePropagation();
 		var valueToEdit = e.target.attributes[0].value.split("-")[1];
-		console.log(this);
 		Session.set('valueToEdit', valueToEdit);
+		
 	},
 	'blur .record-text, blur .record-hours, blur .record-rate' : function(e){
         var currentBlock = Blocks.findOne({_id: e.target.id});
@@ -61,23 +116,24 @@ Template.estimationItem.events({
 			var currentBlock = Blocks.findOne({_id: e.target.id});
 			var currentEstimation = Estimations.findOne({_id: currentBlock.estimationId});
 			var parentBlock = Blocks.findOne({_id: currentBlock.parentId});
-			var newBlockId;
 			Meteor.call('blockInsert', currentEstimation._id, parentBlock._id, currentBlock.nesting, currentBlock.index + 1);
 			
-			parentBlock = Blocks.findOne({_id: currentBlock.parentId});
-       	 	newBlockId = parentBlock.blocks[parentBlock.blocks.length - 1];
-       	 	var newBlock = Blocks.findOne({_id: newBlockId});
+       	 	var newBlock = Blocks.findOne({parentId: parentBlock._id, index: currentBlock.index + 1});
        	 	Session.set('valueToEdit', "rate");
-        	document.getElementById(newBlockId).getElementsByClassName("record-text-div")[0].innerHTML = "<input class='record-text mousetrap'  type='text' id=" + newBlockId + " value='' />";
-            document.getElementById(newBlockId).getElementsByClassName("record-text")[0].focus();
+        	document.getElementById(newBlock._id).getElementsByClassName("record-text-div")[0].innerHTML = "<input class='record-text mousetrap'  type='text' id=" + newBlock._id + " value='' />";
+            document.getElementById(newBlock._id).getElementsByClassName("record-text")[0].focus();
        	}	
+       	e.stopImmediatePropagation();
 	},
 	'keypress .record-hours' : function(e) {
-        if (e.keyCode == 13) {    	
+        if (e.keyCode == 13) {  
+        	e.stopImmediatePropagation();  	
 			Session.set('valueToEdit', "hours");
+			document.getElementById(this._id).getElementsByClassName("record-hours")[0].blur();
             document.getElementById(this._id).getElementsByClassName("record-rate-div")[0].innerHTML = "<input class='record-rate' type='text' value='" + this.rate + "' id=" + this._id + " />";
             document.getElementById(this._id).getElementsByClassName("record-rate")[0].focus();
         }   
+        
     },
     'keypress .record-text' : function(e) {
     	if (e.keyCode == 13) {
@@ -90,15 +146,6 @@ Template.estimationItem.events({
         			if (error){
         				throwError(error.reason);
         			}
-
-        			var newBlockId = result;
-        			currentBlock.blocks.unshift(newBlockId);
-
-       	 			Meteor.call('blockUpdate', currentBlock._id, "blocks", currentBlock.blocks, function(error) {
-        				if (error){
-        					throwError(error.reason);
-        				}
-       	 			});
        	 		});
 
     		}

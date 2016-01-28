@@ -5,8 +5,10 @@
 	    		<div class="record-text-div empty {{nesting}}">{{text}}</div>
 	        {{else}}
 	            <div class="record-text-div {{nesting}}"><b>{{text}}</b></div>
-	        {{/if}}
-	        <div class="record-delete-div parent"><button class="delete">&times;</button></div>
+	        {{/if}}	
+			{{#if notBaseBlock}}
+				<div class="record-delete-div parent"><button class="delete">&times;</button></div>
+			{{/if}}	
 	    {{else}}
 	        {{#if lineIsEmpty}}
 	            <div class="record-text-div empty {{nesting}}">{{text}}</div>
@@ -19,9 +21,15 @@
 	        <div class="record-delete-div"><button class="delete">&times;</button></div>
 	    {{/if}}
 	</div>
-	{{#if blocks.length}}
-	    {{#each blocksOfEstimation}}
-	        {{>estimationItem}}
-	    {{/each}}
-	{{/if}}
+	{{#each blocksOfEstimation}}
+	    {{>estimationItem}}
+	{{/each}}
+	{{#if endOfBlock}}
+		<div class="record-line">
+	        <div class="total-text-div {{nesting}}"><b>{{text}} Total</b></div>
+	        <div class="total-hours-div"><b>{{totalHours}}</b></div>
+	        <div class="total-rate-div"></div>
+	        <div class="total-sum-div"><b>{{totalSum}}</b></div>
+	    </div>
+    {{/if}}
 </template>

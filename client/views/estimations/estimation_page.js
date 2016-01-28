@@ -1,6 +1,6 @@
 Template.estimationPage.helpers({
 	blocksOfEstimation: function() {
-        return Blocks.find({_id: this.blocks[0]});
+        return Blocks.find({parentId: this._id});
 	}
 });
 
