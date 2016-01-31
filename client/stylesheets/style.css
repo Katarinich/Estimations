@@ -19,7 +19,7 @@ input[type="text"] {
 .container, .non-development{
     width: 1200px;
 }
-.record-line, .testing, .stabilization, .project-management{
+.record-line{
     text-align: center;
     margin-top: 10px;
     height: 30px;
@@ -37,15 +37,14 @@ input[type="text"] {
     display: inline;
 }
 
-.record-hours, .record-rate, .record-sum, .testing-input, .testing-rate-input, .stabilization-input, .stabilization-rate-input,
-.project-management-input, .project-management-rate-input{
+.record-hours, .record-rate, .record-sum, .non-development-input{
     width: 80px;
     display: inline;
 }
 .client-name-input{
     display: none;
 }
-.record-text-div, .testing-text, .total-text-div, .stabilization-text, .project-management-text{
+.record-text-div, .total-text-div{
     text-align: left;
 	height: 14px;
     width: 400px;
@@ -59,10 +58,7 @@ input[type="text"] {
 .record-delete-div{
     display: inline;
 }
-.record-rate-div, .record-hours-div, .record-sum-div, .testing-hours-div, .testing-input-div, .testing-rate-div,
-.testing-sum-div, .total-rate-div, .total-hours-div, .total-sum-div, .stabilization-hours-div, .stabilization-input-div,
-.stabilization-rate-div, .stabilization-sum-div, .project-management-hours-div, .project-management-input-div,
-.project-management-rate-div, .project-management-sum-div{
+.record-rate-div, .record-hours-div, .record-sum-div, .non-development-input-div, .total-hours-div, .total-sum-div, .total-rate-div{
     width: 80px;
     height: 30px;
     display: inline-block;
@@ -148,4 +144,59 @@ input[type="text"] {
 }
 .names{
     margin-bottom: 30px;
+}
+
+.typeahead {
+    background-color: #fff;
+}
+
+.typeahead:focus {
+    border: 2px solid #0097cf;
+}
+
+.tt-query {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+    color: #999
+}
+
+.tt-menu {
+    width: 422px;
+    margin: 4px 0;
+    padding: 8px 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.tt-suggestion:hover {
+    cursor: pointer;
+    color: #fff;
+    background-color: #0097cf;
+}
+
+.tt-suggestion.tt-cursor {
+    color: #fff;
+    background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+    margin: 0;
 }

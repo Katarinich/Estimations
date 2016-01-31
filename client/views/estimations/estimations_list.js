@@ -14,8 +14,12 @@ Template.estimationsList.helpers({
                     return new Spacebars.SafeString("<a href='/estimations/" + object._id + "'>" + value + "</a>");
                 }},
                 { key: 'clientName', label: 'Client' },
-                { key: 'projectTotalHours', label: 'Hours' },
-                { key: 'projectTotalSum', label: 'Sum'},
+                { key: '', label: 'Hours', fn: function(value, object) {
+                    return object.developmentTotalHours + object.nonDevelopmentTotalHours;
+                } },
+                { key: '', label: 'Sum', fn: function(value, object) {
+                    return object.developmentTotalSum + object.nonDevelopmentTotalSum;
+                }},
                 { key: 'dateCreated', label: 'Date Created', fn: function(value, object) {
                     if(object.dateCreated != undefined) {
                         return object.dateCreated.getDate() + "." + object.dateCreated.getMonth() + "." + object.dateCreated.getFullYear() +
@@ -53,5 +57,17 @@ Template.estimationsList.events({
         		throwError(error.reason);
         	}
         });
+    },
+    "keyup .client-filter-input, input .client-filter-input": function (event, template) {
+        var input = event.target.value;
+        if (!_.isNaN(input)) {
+            template.filter.set(input);
+        } else {
+            template.filter.set("");
+        }
+    },
+    'click .clear-filter' : function(event, template){
+        template.filter.set("");
+        document.getElementById("client-filter").value = "";
     }
 });

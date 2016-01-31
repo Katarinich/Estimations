@@ -18,8 +18,32 @@
                 <input class="client-name-input typeahead" type="text" value={{clientName}} autocomplete="off" spellcheck="off" data-source="clients" />
             </div>
         </div>
-        {{#each blocksOfEstimation}}
+        {{#each developmentBlocks}}
             {{>estimationItem}}
         {{/each}}
+
+        <div class="non-development-label nt-lvl-0-1"><b>Non-development Activities</b></div>
+        {{#each nonDevelopmentBlocks}}
+            {{>estimationNonDevelopmentItem}}
+        {{/each}}
+
+        
+         <div class="record-line">
+            <div class="total-text-div nt-lvl-0"><b>Non-development Activities Total</b></div>
+            <div class="total-hours-div"><b>{{nonDevelopmentTotalHours}}</b></div>
+            <div class="total-rate-div"></div>
+            <div class="total-sum-div"><b>{{nonDevelopmentTotalSum}}</b></div>
+        </div>
+        <div class="record-line">
+            <div class="total-text-div nt-lvl-0"><b>Project Total</b></div>
+            <div class="total-hours-div"><b>{{projectTotalHours}}</b></div>
+            <div class="total-rate-div"></div>
+            <div class="total-sum-div"><b>{{projectTotalSum}}</b></div>
+        </div>
+
     </div>
+</template>
+
+<template name="userPill">
+    <span>{{clientName}}</span>
 </template>

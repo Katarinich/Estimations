@@ -1,6 +1,4 @@
 Template.estimationItem.rendered = function() {
-    Meteor.typeahead.inject();
-
     Mousetrap.bind('ctrl+right', function(e, combo) {
     	var currentValue = e.target.value;
     	var currentBlock = Blocks.findOne({_id: e.target.id});
@@ -107,7 +105,6 @@ Template.estimationItem.events({
         			throwError(error.reason);
         		}
        	 	});
-            //Lists.update({_id: currentBlock.listId}, {$set: {dateUpdated: new Date()}});
         }
         else document.getElementById(currentBlock._id).getElementsByClassName("record-" + valueToEdit + "-div")[0].innerHTML = newValue;
 	},
