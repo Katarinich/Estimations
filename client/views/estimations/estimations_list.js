@@ -51,11 +51,15 @@ Template.estimationsList.events({
         });
     },
     'click .delete': function(event){
-        var estimationId = "" + event.target.id + "";
-        Meteor.call('estimationRemove', estimationId, function(error) {
-        	if (error){
-        		throwError(error.reason);
-        	}
+        bootbox.confirm("Are you sure you want to delete this estimation?", function(result) {
+            if(result == true){
+                var estimationId = "" + event.target.id + "";
+                Meteor.call('estimationRemove', estimationId, function(error) {
+                	if (error){
+                		throwError(error.reason);
+                	}
+                });
+            }
         });
     },
     "keyup .client-filter-input, input .client-filter-input": function (event, template) {

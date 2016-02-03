@@ -74,7 +74,19 @@ Template.estimationItem.helpers({
 
 Template.estimationItem.events({
 	'click .delete' : function(e) {
-		Meteor.call('blockRemove', this._id);
+		var blockId = this._id;
+		if(Blocks.find({parentId: this._id}).count() > 0){
+			bootbox.confirm("With this line, will be deleted it's child lines. Are you sure you want to do this?", function(result) {
+				if(result == true) 
+					{
+						console.log(this);
+						Meteor.call('blockRemove', blockId);
+					}
+
+			});
+		}
+		else Meteor.call('blockRemove', this._id);
+		e.stopImmediatePropagation();
 	},
 	'click .record-text-div, click .record-hours-div, click .record-rate-div' : function(e){
 		console.log(this);
@@ -100,7 +112,7 @@ Template.estimationItem.events({
 
         if(newValue != currentBlock[valueToEdit]){
         	document.getElementById(currentBlock._id).getElementsByClassName("record-" + valueToEdit + "-div")[0].innerHTML = "";
-            Meteor.call('blockUpdate', currentBlock._id, valueToEdit, newValue, function(error) {
+            Meteor.call('blockUpdate', currentBlock._id, {[valueToEdit]: newValue}, function(error) {
         		if (error){
         			throwError(error.reason);
         		}
@@ -139,11 +151,15 @@ Template.estimationItem.events({
 
     			var newNesting = "nt-lvl-" + (Number(this.nesting.charAt(this.nesting.length - 1)) + 1);
     			
-    			Meteor.call('blockInsert', this.estimationId, this._id, newNesting, function(error, result) {
+    			Meteor.call('blockInsert', this.estimationId, this._id, newNesting, 0, function(error, result) {
         			if (error){
         				throwError(error.reason);
         			}
        	 		});
+       	 		var newBlock = Blocks.findOne({parentId: this._id, index: 0});
+	       	 	Session.set('valueToEdit', "text");
+	        	document.getElementById(newBlock._id).getElementsByClassName("record-text-div")[0].innerHTML = "<input class='record-text mousetrap'  type='text' id=" + newBlock._id + " value='' />";
+	            document.getElementById(newBlock._id).getElementsByClassName("record-text")[0].focus();
 
     		}
     		else {
@@ -152,5 +168,6 @@ Template.estimationItem.events({
                 document.getElementById(this._id).getElementsByClassName("record-hours")[0].focus();
     		}
     	}
+    	e.stopImmediatePropagation();
     }
 });

@@ -38,13 +38,13 @@ Template.estimationNonDevelopmentItem.events({
 	'blur .record-rate': function(e) {
 		var newValue = e.target.value;
 
-		Meteor.call('blockUpdate', this._id, "rate", newValue);
+		Meteor.call('blockUpdate', this._id, {rate: newValue});
 	},
 	'blur .non-development-input': function(e) {
 		var newValue = e.target.value;
-		Meteor.call('blockUpdate', this._id, "percent", newValue);
+		Meteor.call('blockUpdate', this._id, {percent: newValue});
 	},
 	'click .non-development-checked': function(e) {
-		Meteor.call('blockUpdate', this._id, "checked", ! this.checked);
+		Meteor.call('blockUpdate', this._id, {checked: ! this.checked});
 	}
 });
