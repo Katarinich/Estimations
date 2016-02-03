@@ -28,7 +28,7 @@ Template.estimationItem.helpers({
     	return Blocks.find({parentId: this._id}, {sort: {index: 1}});
 	},
 	'sum': function(){
-		return Number(this.rate) * Number(this.hours); 
+		return Number(this.rate) * parseInt(this.hours); 
 	},
 	'notBaseBlock' : function() {
 		return this.nesting != "nt-lvl-0";
@@ -39,7 +39,7 @@ Template.estimationItem.helpers({
 		function sumOfBlock(blockId) {
 			Blocks.find({parentId: blockId}).forEach(function(element) {
 				if(element.isParent == false || element.isParent == undefined){
-					result = result + Number(element.hours);
+					result = result + parseInt(element.hours);
 				}
 				else{
 					sumOfBlock(element._id);
@@ -48,7 +48,7 @@ Template.estimationItem.helpers({
 		}
 
 		sumOfBlock(this._id)
-		return result;
+		return result + "h";
 	},
 	'totalSum' : function() {
 		var result = 0;
@@ -56,7 +56,7 @@ Template.estimationItem.helpers({
 		function sumOfBlock(blockId) {
 			Blocks.find({parentId: blockId}).forEach(function(element) {
 				if(element.isParent == false || element.isParent == undefined){
-					result = result + (Number(element.rate) * Number(element.hours));
+					result = result + (Number(element.rate) * parseInt(element.hours));
 				}
 				else{
 					sumOfBlock(element._id);

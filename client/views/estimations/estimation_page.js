@@ -62,6 +62,7 @@ Template.estimationPage.events({
         document.getElementsByClassName("client-name-input")[1] = currentText;
         document.getElementsByClassName("client-name-input")[1].focus();
     },
+    
     'blur .client-name-input' : function(e){
         var newText = e.target.value;
 

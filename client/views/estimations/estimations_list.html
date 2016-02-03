@@ -1,5 +1,10 @@
 <template name="estimationsList">
 	<div class="container">
+		<ol class="breadcrumb">
+			{{>loginButtons}}
+            <li class="active">Estimations</li>
+        </ol>
+
 		<div class="search-label"><b>Search:</b> </div>
 	    <input class="client-filter-input" id="client-filter" type="text"/>
 	    <button class='clear-filter'>&times;</button>

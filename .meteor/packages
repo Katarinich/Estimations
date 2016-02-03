@@ -22,6 +22,10 @@ iron:router
 mizzao:autocomplete
 sergeyt:typeahead
 aslagle:reactive-table
-mrt:accounts-ui-bootstrap-dropdown
 accounts-password
 fongandrew:find-and-modify
+alanning:roles
+random
+email
+momentjs:moment
+ian:accounts-ui-bootstrap-3

@@ -4,7 +4,7 @@
 	    	{{#if lineIsEmpty}}
 	    		<div class="record-text-div empty {{nesting}}">{{text}}</div>
 	        {{else}}
-	            <div class="record-text-div {{nesting}}"><b>{{text}}</b></div>
+	            <div class="record-text-div parent-text {{nesting}}">{{text}}</div>
 	        {{/if}}	
 			{{#if notBaseBlock}}
 				<div class="record-delete-div parent"><button class="delete">&times;</button></div>

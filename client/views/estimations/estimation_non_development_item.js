@@ -1,36 +1,13 @@
 Template.estimationNonDevelopmentItem.helpers({
 	'hours': function() {
 		var totalHours = 0;
-		Blocks.find({estimationId: this.estimationId, nonDevelopment: undefined}).forEach(function(element) {
-			if(element.isParent != true){
-				var numberOfHours = Number(element.hours.substring(0, element.hours.length - 1));
-	            if(element.hours.charAt(element.hours.length - 1) == 'd'){
-	                numberOfHours = numberOfHours * 24;
-	            }
-	            else if(element.hours.charAt(element.hours.length - 1) == 'm'){
-	            	numberOfHours = numberOfHours * 720;
-	            }
-	            totalHours = totalHours + numberOfHours;
-	        }
-		});
-
-		return totalHours * (parseInt(this.percent) / 100);
+		var currentEstimation = Estimations.findOne({_id: this.estimationId});
+		return Math.round(currentEstimation.developmentTotalHours * (parseInt(this.percent) / 100));
 	},
 	'sum': function() {
 		var totalHours = 0;
-		Blocks.find({estimationId: this.estimationId, nonDevelopment: undefined}).forEach(function(element) {
-			if(element.isParent != true){
-				var numberOfHours = Number(element.hours.substring(0, element.hours.length - 1));
-	            if(element.hours.charAt(element.hours.length - 1) == 'd'){
-	                numberOfHours = numberOfHours * 24;
-	            }
-	            if(element.hours.charAt(element.hours.length - 1) == 'm'){
-	                numberOfHours = numberOfHours * 720;
-	            }
-	            totalHours = totalHours + numberOfHours;
-	        }
-		});
-		return (totalHours * (parseInt(this.percent) / 100)) * this.rate;
+		var currentEstimation = Estimations.findOne({_id: this.estimationId});
+		return Math.round(currentEstimation.developmentTotalHours * (parseInt(this.percent) / 100)) * this.rate;
 	}
 });
 

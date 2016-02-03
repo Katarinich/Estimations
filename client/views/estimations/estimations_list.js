@@ -1,5 +1,6 @@
 Template.estimationsList.created = function () {
     this.filter = new ReactiveTable.Filter('client-filter', ['clientName', 'name']);
+    Meteor.subscribe('estimations', Meteor.userId());
 };
 
 Template.estimationsList.helpers({

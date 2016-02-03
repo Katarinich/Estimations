@@ -35,7 +35,9 @@ input[type="text"] {
     width: 400px;
     display: inline;
 }
-
+.parent-text{
+    font-weight: bold;
+}
 .record-hours, .record-rate, .record-sum, .non-development-input{
     width: 80px;
     display: inline;
