@@ -1,11 +1,24 @@
 <template name="adminPage">
-	{{>loginButtons}}
+	<div class="navbar navbar-default" role="navigation">
+	    <div class="navbar-header">
+	        <a class="navbar-brand" href="#">Users</a>
+	    </div>
+	    <div class="navbar-collapse collapse">
+	        <ul class="nav navbar-nav navbar-right">
+	            {{> loginButtons}}
+	        </ul>
+	    </div>
+	</div>
 	{{#each users}}
-		{{email}} 
-		{{#unless verified}}
-			<button class="btn btn-default verify">Verify</button>
-			<button class="btn btn-default reject">Reject</button>
-		{{/unless}}
-		<br>
+		{{#unless thisUser}}
+			{{email}} 
+			{{#unless isRejectedUser}}
+				<button class="btn btn-default reject">Reject</button>
+			{{/unless}}
+			{{#unless isVerifiedUser}}
+				<button class="btn btn-default verify">Verify</button>
+			{{/unless}}
+			<br>
+		{{/unless}}	
 	{{/each}}
 </template>

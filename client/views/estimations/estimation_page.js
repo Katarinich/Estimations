@@ -37,9 +37,17 @@ Template.estimationPage.helpers({
 
 Template.estimationPage.events({
 	'click .list-name' : function(e){
-        var currentText = e.target.innerHTML;
-        e.target.innerHTML = "<input type='text' class='list-name-input' value='" + currentText +"' />";
-        document.getElementsByClassName("list-name-input")[0].focus();
+        if(this.userId == Meteor.userId()) {
+            var currentText = e.target.innerHTML;
+            e.target.innerHTML = "<input type='text' class='list-name-input' value='" + currentText +"' />";
+            document.getElementsByClassName("list-name-input")[0].focus();
+        }
+    },
+    'keypress .list-name-input' : function(e){
+        e.preventDefault();
+        if(e.keyCode == 13 || e.keyCode == 9){
+            document.getElementsByClassName("list-name-input")[0].blur();
+        }
     },
     'blur .list-name-input' : function(e){
         var newText = e.target.value;
@@ -48,7 +56,7 @@ Template.estimationPage.events({
         }
         else {
             document.getElementsByClassName("list-name")[0].innerHTML = "";
-            Meteor.call('estimationUpdate', this._id, "name", newText, function(error) {
+            Meteor.call('estimationUpdate', this._id, {name: newText}, function(error) {
         		if (error){
         			throwError(error.reason);
         		}
@@ -56,11 +64,13 @@ Template.estimationPage.events({
         }
     },
 	'click .client-name-label-div' : function(e){
-        var currentText = e.target.innerHTML;
-        document.getElementsByClassName("client-name-label-div")[0].style.display = "none";
-        document.getElementsByClassName("client-name-input")[1].style.display = 'inline-block';
-        document.getElementsByClassName("client-name-input")[1] = currentText;
-        document.getElementsByClassName("client-name-input")[1].focus();
+        if(this.userId == Meteor.userId()) {
+            var currentText = e.target.innerHTML;
+            document.getElementsByClassName("client-name-label-div")[0].style.display = "none";
+            document.getElementsByClassName("client-name-input")[1].style.display = 'inline-block';
+            document.getElementsByClassName("client-name-input")[1] = currentText;
+            document.getElementsByClassName("client-name-input")[1].focus();
+        }
     },
     
     'blur .client-name-input' : function(e){
@@ -74,7 +84,7 @@ Template.estimationPage.events({
         }
         else {
             document.getElementsByClassName("client-name-label-div")[0].innerHTML = "";
-            Meteor.call('estimationUpdate', this._id, "clientName", newText, function(error) {
+            Meteor.call('estimationUpdate', this._id, {clientName: newText}, function(error) {
                 if (error){
                     throwError(error.reason);
                 }

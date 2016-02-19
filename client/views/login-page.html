@@ -1,3 +1,26 @@
 <template name="loginPage">
-	{{>loginButtons}}
+{{>loginButtons}}
+	<form class="register form-group">
+		{{#if error}}
+			<div class="alert alert-danger" role="alert">{{errorMessage}}</div>
+		{{/if}}
+        <input id="login-email" type="email" class="form-control" name="email" placeholder="Email">
+        {{#if resetPassword}}
+        	<button class="btn btn-primary login-button-form-submit col-xs-12 col-sm-12" id="login-buttons-forgot-password">Reset password</button>
+        	<button id="back-to-login-link" class="btn btn-default col-xs-12 col-sm-12">Cancel</button>
+        	{{else}}
+        	{{#if createAccount}}
+        		<input id="login-password" type="password" class="form-control" name="password" placeholder="Password">
+	        	<button class="btn btn-primary col-xs-12 col-sm-12" id="login-buttons-password" type="button">Create</button>
+	        	<button id="back-to-login-link" class="btn btn-default col-xs-12 col-sm-12">Cancel</button>
+	        	{{else}}
+	        	<input id="login-password" type="password" class="form-control" name="password" placeholder="Password">
+        		<input id="login-button" type="submit" class="btn btn-primary col-xs-12 col-sm-12" value="Sign in">
+			    <div id="login-other-options">
+					<a id="forgot-password-link" class="pull-left">Forgot password?</a>
+					<a id="signup-link" class="pull-right">Create account</a>
+				</div>
+	        {{/if}}
+        {{/if}}
+    </form>
 </template>

@@ -1,9 +1,15 @@
 <template name="estimationsList">
 	<div class="container">
-		<ol class="breadcrumb">
-			{{>loginButtons}}
-            <li class="active">Estimations</li>
-        </ol>
+		<div class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Estimations</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    {{> loginButtons}}
+                </ul>
+            </div>
+        </div>
 
 		<div class="search-label"><b>Search:</b> </div>
 	    <input class="client-filter-input" id="client-filter" type="text"/>

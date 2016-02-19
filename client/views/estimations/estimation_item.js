@@ -69,6 +69,9 @@ Template.estimationItem.helpers({
 	},
 	'endOfBlock' : function() {
 		return Blocks.find({parentId: this._id}).count() > 0;
+	},
+	'thisUser' : function() {
+		return Estimations.findOne({_id: Blocks.findOne({_id: this._id}).estimationId}).userId == Meteor.userId();
 	}
 });
 
@@ -89,13 +92,15 @@ Template.estimationItem.events({
 		e.stopImmediatePropagation();
 	},
 	'click .record-text-div, click .record-hours-div, click .record-rate-div' : function(e){
-		console.log(this);
-		var valueToEdit = e.target.attributes[0].value.split("-")[1];
-		Session.set('valueToEdit', valueToEdit);
+		if(Estimations.findOne({_id: Blocks.findOne({_id: this._id}).estimationId}).userId == Meteor.userId()){
+			console.log(this);
+			var valueToEdit = e.target.attributes[0].value.split("-")[1];
+			Session.set('valueToEdit', valueToEdit);
 
-        e.target.innerHTML = "<input class='record-" + valueToEdit + " mousetrap' type='text' id=" + this._id + " value='" + this[valueToEdit] + "' />";
+	        e.target.innerHTML = "<input class='record-" + valueToEdit + " mousetrap' type='text' id=" + this._id + " value='" + this[valueToEdit] + "' />";
 
-        document.getElementsByClassName("record-" + valueToEdit)[0].focus();
+	        document.getElementsByClassName("record-" + valueToEdit)[0].focus();
+	    }
         e.stopImmediatePropagation();
 	},
 	'focus .record-text, focus .record-hours, focus .record-rate' : function(e) {

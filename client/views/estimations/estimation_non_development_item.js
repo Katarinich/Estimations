@@ -8,6 +8,9 @@ Template.estimationNonDevelopmentItem.helpers({
 		var totalHours = 0;
 		var currentEstimation = Estimations.findOne({_id: this.estimationId});
 		return Math.round(currentEstimation.developmentTotalHours * (parseInt(this.percent) / 100)) * this.rate;
+	},
+	'thisUser' : function() {
+		return Estimations.findOne({_id: Blocks.findOne({_id: this._id}).estimationId}).userId == Meteor.userId();
 	}
 });
 

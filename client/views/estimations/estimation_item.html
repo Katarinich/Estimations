@@ -18,7 +18,7 @@
 	        <div class="record-hours-div">{{hours}}</div>
 	        <div class="record-rate-div">{{rate}}</div>
 	        <div class="record-sum-div">{{sum}}</div>
-	        <div class="record-delete-div"><button class="delete">&times;</button></div>
+	        {{#if thisUser}}<div class="record-delete-div"><button class="delete">&times;</button></div>{{/if}}
 	    {{/if}}
 	</div>
 	{{#each blocksOfEstimation}}

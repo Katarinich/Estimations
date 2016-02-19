@@ -13,9 +13,6 @@ input[type="text"] {
     -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
-.breadcrumb{
-    width: 1076px;
-}
 .container, .non-development{
     width: 1200px;
 }
@@ -62,6 +59,7 @@ input[type="text"] {
 .record-rate-div, .record-hours-div, .record-sum-div, .non-development-input-div, .total-hours-div, .total-sum-div, .total-rate-div{
     width: 80px;
     height: 30px;
+    text-align: center;
     display: inline-block;
 }
 .parent{
@@ -145,6 +143,65 @@ input[type="text"] {
 }
 .names{
     margin-bottom: 30px;
+}
+.efforts{
+    margin-left: 800px;
+}
+
+.register{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 15px;
+    top: 50%;
+    left: 50%;
+}
+
+#login-email {
+    margin: 0 0 -1px;
+    border-radius: 0px;
+    position: relative;
+    z-index: 1;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#login-password {
+    margin: 0 0 -1px;
+    border-radius: 0px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+#login-screen .dropdown-menu {
+  display: block;
+  position: relative;
+  height: 245px;
+  margin-left: auto;
+  margin-right: auto;
+  float: none;
+}
+
+#login-screen #login-dropdown-list {
+  display: block;
+}
+
+/* Hides the toggle that you click on */
+
+#login-screen a.dropdown-toggle {
+  display: none;
+}
+
+#login-button, #back-to-login-link, #login-buttons-forgot-password, #login-buttons-password{
+    margin-top: 5px;
+}
+
+#forgot-password-link, #signup-link {
+    margin-top: 10px;
+    cursor: pointer;
 }
 
 .typeahead {

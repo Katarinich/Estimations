@@ -7,6 +7,10 @@ Meteor.publish('estimations', function(user) {
 	}
 });
 
+Meteor.publish('estimation', function(id){
+	return Estimations.find({_id: id});
+});
+
 Meteor.publish('blocks', function(estimation) {
   return Blocks.find({estimationId: estimation});
 });

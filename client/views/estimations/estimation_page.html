@@ -1,7 +1,8 @@
 <template name="estimationPage">
 	<div class="container">
-
+        
         <ol class="breadcrumb">
+            {{>loginButtons}}
             <li><a href="/estimations/">Estimations</a></li>
             <li class="active">{{name}}</li>
         </ol>
@@ -18,6 +19,13 @@
                 <input class="client-name-input typeahead" type="text" value={{clientName}} autocomplete="off" spellcheck="off" data-source="clients" />
             </div>
         </div>
+
+        <div class="columnsNames">
+            <div class="record-hours-div efforts">Efforts</div>
+            <div class="record-hours-div">Hourly Rate</div>
+            <div class="record-hours-div">Cost</div>
+        </div>
+
         {{#each developmentBlocks}}
             {{>estimationItem}}
         {{/each}}
@@ -30,13 +38,13 @@
         
          <div class="record-line">
             <div class="total-text-div nt-lvl-0"><b>Non-development Activities Total</b></div>
-            <div class="total-hours-div"><b>{{nonDevelopmentTotalHours}}</b></div>
+            <div class="total-hours-div"><b>{{nonDevelopmentTotalHours}}h</b></div>
             <div class="total-rate-div"></div>
             <div class="total-sum-div"><b>{{nonDevelopmentTotalSum}}</b></div>
         </div>
         <div class="record-line">
             <div class="total-text-div nt-lvl-0"><b>Project Total</b></div>
-            <div class="total-hours-div"><b>{{projectTotalHours}}</b></div>
+            <div class="total-hours-div"><b>{{projectTotalHours}}h</b></div>
             <div class="total-rate-div"></div>
             <div class="total-sum-div"><b>{{projectTotalSum}}</b></div>
         </div>

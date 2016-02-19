@@ -8,6 +8,15 @@ Template.adminPage.helpers({
 	},
 	'email' : function() {
 		return this.emails[0].address;
+	},
+	'isRejectedUser' : function() {
+		return Roles.userIsInRole(this._id, 'rejectedUser');
+	},
+	'isVerifiedUser' : function() {
+		return Roles.userIsInRole(this._id, 'verifiedUser');
+	},
+	'thisUser' : function() {
+		return this._id == Meteor.userId();
 	}
 });
 
