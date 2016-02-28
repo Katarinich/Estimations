@@ -1,13 +1,21 @@
 <template name="estimationItem">
-	<div id={{_id}} class="record-line" >
+	<div class="record-line">
 	    {{#if isParent}}
 	    	{{#if lineIsEmpty}}
 	    		<div class="record-text-div empty {{nesting}}">{{text}}</div>
 	        {{else}}
 	            <div class="record-text-div parent-text {{nesting}}">{{text}}</div>
 	        {{/if}}	
-			{{#if notBaseBlock}}
-				<div class="record-delete-div parent"><button class="delete">&times;</button></div>
+	        <div class="record-hours-div"></div>
+	        <div class="record-rate-div"></div>
+	        <div class="record-sum-div"></div>
+	        {{#if thisUser}}
+				{{#if notBaseBlock}}
+					<span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+					<div class="record-delete-div"><button class="delete">&times;</button></div>
+					{{/if}}
+				{{else}}
+	        	<span class="glyphicon glyphicon-pencil comment-block" aria-hidden="true"></span>
 			{{/if}}	
 	    {{else}}
 	        {{#if lineIsEmpty}}
@@ -18,12 +26,29 @@
 	        <div class="record-hours-div">{{hours}}</div>
 	        <div class="record-rate-div">{{rate}}</div>
 	        <div class="record-sum-div">{{sum}}</div>
-	        {{#if thisUser}}<div class="record-delete-div"><button class="delete">&times;</button></div>{{/if}}
+	        {{#if thisUser}}
+	        	<span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+	        	<div class="record-delete-div"><button class="delete">&times;</button></div>
+	        	{{else}}
+	        	<span class="glyphicon glyphicon-pencil comment-block" aria-hidden="true"></span>
+	        {{/if}}
 	    {{/if}}
-	</div>
+
+	    {{#if isComment}}
+			<div class="comment {{nesting}}">
+				<textarea class="form-control" rows="5" id="comment">{{comment}}</textarea>
+				<button class="save-comment btn btn-default">Save</button>
+				<button class="cancel-comment btn btn-default">Cancel</button>
+			</div>
+		{{else}}
+			{{#markdown}}{{comment}}{{/markdown}}
+		{{/if}}
+	
+	<div class="child-records" id={{_id}}>
 	{{#each blocksOfEstimation}}
 	    {{>estimationItem}}
 	{{/each}}
+	</div>
 	{{#if endOfBlock}}
 		<div class="record-line">
 	        <div class="total-text-div {{nesting}}"><b>{{text}} Total</b></div>
@@ -31,5 +56,5 @@
 	        <div class="total-rate-div"></div>
 	        <div class="total-sum-div"><b>{{totalSum}}</b></div>
 	    </div>
-    {{/if}}
+    {{/if}}</div>
 </template>

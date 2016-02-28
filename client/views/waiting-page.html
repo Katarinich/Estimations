@@ -1,4 +1,13 @@
 <template name="waitingPage">
-	{{>loginButtons}}
+	<div class="navbar navbar-default" role="navigation">
+	    <div class="navbar-header">
+	        <a class="navbar-brand" href="#">Users</a>
+	    </div>
+	    <div class="navbar-collapse collapse">
+	        <ul class="nav navbar-nav navbar-right">
+	            {{> loginButtons}}
+	        </ul>
+	    </div>
+	</div>
 	Please wait. Your request is still being processed.
 </template>

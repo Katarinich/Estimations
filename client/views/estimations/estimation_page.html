@@ -21,14 +21,15 @@
         </div>
 
         <div class="columnsNames">
-            <div class="record-hours-div efforts">Efforts</div>
-            <div class="record-hours-div">Hourly Rate</div>
-            <div class="record-hours-div">Cost</div>
+            <div class="column-name efforts">Efforts</div>
+            <div class="column-name">Hourly Rate</div>
+            <div class="column-name">Cost</div>
         </div>
-
+        <div id="records">
         {{#each developmentBlocks}}
             {{>estimationItem}}
         {{/each}}
+        </div>
 
         <div class="non-development-label nt-lvl-0-1"><b>Non-development Activities</b></div>
         {{#each nonDevelopmentBlocks}}

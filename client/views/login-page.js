@@ -43,6 +43,9 @@ Template.loginPage.events({
 			        Accounts.createUser({
 			            email: email,
 			            password: password
+			        }, function(error){
+			        	Session.set("error", true);
+	    				Session.set("errorMessage", error.reason);
 			        });
 			        Meteor.loginWithPassword(email, password);
 			    }
