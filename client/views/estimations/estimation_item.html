@@ -41,20 +41,23 @@
 				<button class="cancel-comment btn btn-default">Cancel</button>
 			</div>
 		{{else}}
-			{{#markdown}}{{comment}}{{/markdown}}
+			{{#if comment}}
+				<div class="well">{{#markdown}}{{comment}}{{/markdown}}</div>
+			{{/if}}
 		{{/if}}
 	
-	<div class="child-records" id={{_id}}>
-	{{#each blocksOfEstimation}}
-	    {{>estimationItem}}
-	{{/each}}
-	</div>
-	{{#if endOfBlock}}
-		<div class="record-line">
-	        <div class="total-text-div {{nesting}}"><b>{{text}} Total</b></div>
-	        <div class="total-hours-div"><b>{{totalHours}}</b></div>
-	        <div class="total-rate-div"></div>
-	        <div class="total-sum-div"><b>{{totalSum}}</b></div>
-	    </div>
-    {{/if}}</div>
+		<div class="child-records" id={{_id}}>
+			{{#each blocksOfEstimation}}
+			    {{>estimationItem}}
+			{{/each}}
+		</div>
+		{{#if endOfBlock}}
+			<div class="record-line">
+		        <div class="total-text-div {{nesting}}"><b>{{text}} Total</b></div>
+		        <div class="total-hours-div"><b>{{totalHours}}</b></div>
+		        <div class="total-rate-div"></div>
+		        <div class="total-sum-div"><b>{{totalSum}}</b></div>
+		    </div>
+	    {{/if}}
+    </div>
 </template>

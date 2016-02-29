@@ -1,53 +1,56 @@
 Template.estimationItem.rendered = function() {
 	Session.set("comment", null);
 
+    var sortableOptions = {
+        handle: '.glyphicon-move',
+        animation: 150,
+        onStart: function (evt) {
+            Session.set("sortableChosen", Array.prototype.indexOf.call(this.el.children, document.getElementsByClassName("sortable-chosen")[0]));
+        },
+        onEnd: function (evt) {
+            evt.oldIndex = Session.get("sortableChosen"); 
+            Blocks.find({parentId: this.el.id}).forEach(function(element) {
+                if(evt.oldIndex < evt.newIndex) {
+                    if(element.index >= evt.oldIndex && element.index <= evt.newIndex) {
+                        if(element.index == evt.oldIndex) Meteor.call('blockUpdate', element._id, {index: evt.newIndex});
+                        else Meteor.call('blockUpdate', element._id, {index: element.index - 1});
+                    }
+                }
+                else {
+                    if(element.index >= evt.newIndex && element.index <= evt.oldIndex) {
+                        var newIndex = element.index + 1;
+                        if(element.index == evt.oldIndex) newIndex = evt.newIndex;
+                        Meteor.call('blockUpdate', element._id, {index: newIndex});
+                    }
+                }
+            });
+        }
+    }
+
     Mousetrap.bind('ctrl+right', function(e, combo) {
-    	console.log(this);
     	var currentValue = e.target.value;
-    	var currentBlock = Blocks.findOne({_id: e.target.id});
-    	Meteor.call('blockDepose', e.target.id, 1);
-    	if(Blocks.findOne({_id: e.target.id}).nesting != currentBlock.nesting){
+    	var currentBlock = Session.get("currentBlock");
+    	Meteor.call('blockDepose', currentBlock._id, 1);
+    	if(Blocks.findOne({_id: currentBlock._id}).nesting != currentBlock.nesting){
 	    	document.getElementsByClassName("record-text-div")[Session.get("currentBlockIndex")].innerHTML = "<input class='record-text mousetrap'  type='text' id=" + e.target.id + " value='" + currentValue + "' />";
 	        document.getElementsByClassName("record-text")[0].focus();
+            Sortable.create(document.getElementById(Blocks.findOne({_id: currentBlock._id}).parentId), sortableOptions);
     	}
     });
 
     Mousetrap.bind('ctrl+left', function(e, combo) {
     	var currentValue = e.target.value;
-    	var currentBlock = Blocks.findOne({_id: e.target.id});
-    	Meteor.call('blockDepose', e.target.id, -1);
-    	if(Blocks.findOne({_id: e.target.id}).nesting != currentBlock.nesting){
+    	var currentBlock = Session.get("currentBlock");
+    	Meteor.call('blockDepose', currentBlock._id, -1);
+    	if(Blocks.findOne({_id: currentBlock._id}).nesting != currentBlock.nesting){
 	    	document.getElementsByClassName("record-text-div")[Session.get("currentBlockIndex")].innerHTML = "<input class='record-text mousetrap'  type='text' id=" + e.target.id + " value='" + currentValue + "' />";
 	        document.getElementsByClassName("record-text")[0].focus();
+            Sortable.create(document.getElementById(Blocks.findOne({_id: currentBlock._id}).parentId), sortableOptions);
     	}
     });
 
     if(this.data.isParent && Estimations.findOne({_id: Blocks.findOne({_id: this.data._id}).estimationId}).userId == Meteor.userId()) {
-    	Sortable.create(document.getElementById(this.data._id), {
-            handle: '.glyphicon-move',
-            animation: 150,
-            onStart: function (evt) {
-                Session.set("sortableChosen", Array.prototype.indexOf.call(this.el.children, document.getElementsByClassName("sortable-chosen")[0]));
-            },
-            onEnd: function (evt) {
-                evt.oldIndex = Session.get("sortableChosen"); 
-                Blocks.find({parentId: this.el.id}).forEach(function(element) {
-                    if(evt.oldIndex < evt.newIndex) {
-                        if(element.index >= evt.oldIndex && element.index <= evt.newIndex) {
-                            if(element.index == evt.oldIndex) Meteor.call('blockUpdate', element._id, {index: evt.newIndex});
-                            else Meteor.call('blockUpdate', element._id, {index: element.index - 1});
-                        }
-                    }
-                    else {
-                        if(element.index >= evt.newIndex && element.index <= evt.oldIndex) {
-                            var newIndex = element.index + 1;
-                            if(element.index == evt.oldIndex) newIndex = evt.newIndex;
-                            Meteor.call('blockUpdate', element._id, {index: newIndex});
-                        }
-                    }
-                });
-            }
-        });
+    	Sortable.create(document.getElementById(this.data._id), sortableOptions);
     }
 };
 
@@ -114,21 +117,22 @@ Template.estimationItem.events({
 		var blockId = this._id;
 		if(Blocks.find({parentId: this._id}).count() > 0){
 			bootbox.confirm("With this line, will be deleted it's child lines. Are you sure you want to do this?", function(result) {
-				if(result == true) 
-					{
-						console.log(this);
-						Meteor.call('blockRemove', blockId);
-					}
-
+				if(result == true) {
+					Meteor.call('blockRemove', blockId);
+				}
 			});
 		}
 		else Meteor.call('blockRemove', this._id);
 		e.stopImmediatePropagation();
 	},
+    'focus .record-text, focus .record-hours, focus .record-rate' : function(e) {
+        Session.set("currentBlock", this);
+    },
 	'click .record-text-div, click .record-hours-div, click .record-rate-div' : function(e){
 		var valueToEdit = e.target.attributes[0].value.split("-")[1].split(" ")[0];
 		if(Estimations.findOne({_id: Blocks.findOne({_id: this._id}).estimationId}).userId == Meteor.userId() && document.getElementsByClassName("record-" + valueToEdit).length != 1){
 			Session.set('valueToEdit', valueToEdit);
+            Session.set("currentBlockId", this._id);
 			Session.set("currentBlockIndex", Array.prototype.indexOf.call(document.getElementsByClassName("record-" + valueToEdit + "-div"), e.target));
 	        e.target.innerHTML = "<input class='record-" + valueToEdit + " mousetrap' type='text' value='" + this[valueToEdit] + "' />";
 
@@ -177,7 +181,6 @@ Template.estimationItem.events({
             document.getElementsByClassName("record-rate-div")[Session.get("currentBlockIndex")].innerHTML = "<input class='record-rate' type='text' value='" + this.rate + "' id=" + this._id + " />";
             document.getElementsByClassName("record-rate")[0].focus();
         }   
-        
     },
     'keypress .record-text' : function(e) {
     	if (e.keyCode == 13) {
@@ -191,13 +194,13 @@ Template.estimationItem.events({
         				throwError(error.reason);
         			}
        	 		});
+
        	 		var newBlock = Blocks.findOne({parentId: this._id, index: 0});
        	 		document.getElementsByClassName("record-text")[0].blur();
 	       	 	Session.set('valueToEdit', "text");
 	       	 	Session.set("currentBlockIndex", Session.get("currentBlockIndex") + 1);
 	        	document.getElementsByClassName("record-text-div")[Session.get("currentBlockIndex")].innerHTML = "<input class='record-text mousetrap'  type='text' id=" + newBlock._id + " value='' />";
 	            document.getElementsByClassName("record-text")[0].focus();
-
     		}
     		else {
 				Session.set('valueToEdit', "text");
