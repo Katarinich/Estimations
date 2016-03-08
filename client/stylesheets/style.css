@@ -13,6 +13,16 @@ input[type="text"] {
     -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
+.-autocomplete-container {
+  position: absolute;
+  z-index: 1;
+}
+.label{
+  color: black;
+}
+ul {
+    list-style-type: none;
+}
 textarea{
     background-color: white;
 }
@@ -28,7 +38,7 @@ textarea{
     padding-left: 950px;
     text-align: center;
 }
-.record-text{
+.record-value{
     width: 400px;
     display: inline;
 }
@@ -42,7 +52,7 @@ textarea{
 .client-name-input{
     display: none;
 }
-.record-text-div, .total-text-div{
+.record-value-div, .total-text-div{
     vertical-align: top;
 	height: 30px;
     width: 400px;
@@ -67,12 +77,10 @@ textarea{
     margin-left: 252px;
 }
 .nt-lvl-0{
-    padding-left: 0px;
-    margin-right: 400px;
+    margin-left: 360px;
 }
 .nt-lvl-1{
-    margin-left: 50px;
-    margin-right: 350px;
+    margin-left: 320px;
 }
 .nt-lvl-0-1{
     margin-right: 320px;
@@ -82,16 +90,13 @@ textarea{
     margin-right: 266px;
 }
 .nt-lvl-2{
-    margin-left: 100px;
-    margin-right: 300px;
+    margin-left: 280px;
 }
 .nt-lvl-3{
-    margin-left: 150px;
-    margin-right: 250px;
+    margin-left: 240px;
 }
 .nt-lvl-4{
     margin-left: 200px;
-    margin-right: 200px;
 }
 .delete, .clear-filter{
     font-weight: bold;
@@ -151,6 +156,9 @@ textarea{
 .comment{
     margin-top: 5px;
     width: 400px;
+}
+.glyphicon {
+  cursor: grab;
 }
 .save-comment, .cancel-comment{
     margin-top: 5px;

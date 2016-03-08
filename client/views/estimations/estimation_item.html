@@ -1,29 +1,33 @@
 <template name="estimationItem">
-	<div class="record-line">
+	<li class="record-line">
 	    {{#if isParent}}
 	    	{{#if lineIsEmpty}}
-	    		<div class="record-text-div empty {{nesting}}">{{text}}</div>
+	    		<div class="record-value-div empty">{{value}}</div>
 	        {{else}}
-	            <div class="record-text-div parent-text {{nesting}}">{{text}}</div>
-	        {{/if}}	
-	        <div class="record-hours-div"></div>
+	            {{index}} <div class="record-value-div parent-text">{{value}}</div>
+	        {{/if}}
+	        <div class="record-hours-div nt-lvl-{{depth}}"></div>
 	        <div class="record-rate-div"></div>
 	        <div class="record-sum-div"></div>
 	        {{#if thisUser}}
-				{{#if notBaseBlock}}
+				{{#if depth}}
 					<span class="glyphicon glyphicon-move" aria-hidden="true"></span>
 					<div class="record-delete-div"><button class="delete">&times;</button></div>
 					{{/if}}
 				{{else}}
 	        	<span class="glyphicon glyphicon-pencil comment-block" aria-hidden="true"></span>
-			{{/if}}	
+			{{/if}}
 	    {{else}}
-	        {{#if lineIsEmpty}}
-	            <div class="record-text-div empty {{nesting}}">{{text}}</div>
-	        {{else}}
-	             <div class="record-text-div {{nesting}}">{{text}}</div>
-	        {{/if}}
-	        <div class="record-hours-div">{{hours}}</div>
+				{{#if lineIsEmpty}}
+					{{index}} <div class="record-value-div empty">
+						{{value}}
+					</div>
+					{{else}}
+					{{index}} <div class="record-value-div">
+						{{value}}
+					</div>
+					{{/if}}
+	        <div class="record-hours-div nt-lvl-{{depth}}">{{hours}}</div>
 	        <div class="record-rate-div">{{rate}}</div>
 	        <div class="record-sum-div">{{sum}}</div>
 	        {{#if thisUser}}
@@ -35,7 +39,7 @@
 	    {{/if}}
 
 	    {{#if isComment}}
-			<div class="comment {{nesting}}">
+			<div class="comment">
 				<textarea class="form-control" rows="5" id="comment">{{comment}}</textarea>
 				<button class="save-comment btn btn-default">Save</button>
 				<button class="cancel-comment btn btn-default">Cancel</button>
@@ -45,19 +49,19 @@
 				<div class="well">{{#markdown}}{{comment}}{{/markdown}}</div>
 			{{/if}}
 		{{/if}}
-	
-		<div class="child-records" id={{_id}}>
+
+		<ul class="child-records" id={{_id}}>
 			{{#each blocksOfEstimation}}
 			    {{>estimationItem}}
 			{{/each}}
-		</div>
-		{{#if endOfBlock}}
+		</ul>
+		{{#if isParent}}
 			<div class="record-line">
-		        <div class="total-text-div {{nesting}}"><b>{{text}} Total</b></div>
-		        <div class="total-hours-div"><b>{{totalHours}}</b></div>
+		        <div class="total-text-div"><b>{{value}} Total</b></div>
+		        <div class="total-hours-div nt-lvl-{{depth}}"><b>{{totalHours}}</b></div>
 		        <div class="total-rate-div"></div>
 		        <div class="total-sum-div"><b>{{totalSum}}</b></div>
 		    </div>
 	    {{/if}}
-    </div>
+    </li>
 </template>

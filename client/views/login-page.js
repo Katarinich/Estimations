@@ -69,9 +69,10 @@ Template.loginPage.events({
         var email = $('[name=email]').val();
         var password = $('[name=password]').val();
         Meteor.loginWithPassword(email, password, function(error){
-	    	console.log(error);
-	    	Session.set("error", true);
-	    	Session.set("errorMessage", error.reason);
+        	if(error == undefined){
+		    	Session.set("error", true);
+		    	Session.set("errorMessage", error.reason);
+		    }
 		});
     }
 });
